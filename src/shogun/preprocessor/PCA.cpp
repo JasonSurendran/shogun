@@ -90,13 +90,9 @@ PCA::~PCA()
 {
 }
 
-void PCA::fit(std::shared_ptr<Features> features)
+void PCA::fit_impl(const SGMatrix<float64_t>& feature_matrix)
 {
-	if (m_fitted)
-		cleanup();
 
-	auto feature_matrix =
-	    features->as<DenseFeatures<float64_t>>()->get_feature_matrix();
 	auto num_vectors = feature_matrix.num_cols;
 	auto num_features = feature_matrix.num_rows;
 	io::info("num_examples: {} num_features: {}", num_vectors, num_features);
@@ -129,7 +125,6 @@ void PCA::fit(std::shared_ptr<Features> features)
 
 	// restore feature matrix
 	fmatrix = fmatrix.colwise() + data_mean;
-	m_fitted = true;
 }
 
 void PCA::init_with_evd(const SGMatrix<float64_t>& feature_matrix, int32_t max_dim_allowed)
@@ -287,14 +282,6 @@ void PCA::init_with_svd(const SGMatrix<float64_t> &feature_matrix, int32_t max_d
 			    std::sqrt(eigenValues[i] * (num_vectors - 1));
 		}
 	}
-}
-
-void PCA::cleanup()
-{
-	m_transformation_matrix=SGMatrix<float64_t>();
-        m_mean_vector = SGVector<float64_t>();
-        m_eigenvalues_vector = SGVector<float64_t>();
-	    m_fitted = false;
 }
 
 SGMatrix<float64_t> PCA::apply_to_matrix(SGMatrix<float64_t> matrix)

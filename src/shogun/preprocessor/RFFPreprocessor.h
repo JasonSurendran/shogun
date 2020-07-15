@@ -36,30 +36,26 @@ public:
 
 	RFFPreprocessor();
 
-	~RFFPreprocessor();
+	~RFFPreprocessor() override;
 
-	virtual SGVector<float64_t> apply_to_feature_vector(SGVector<float64_t> vector) override;
+	SGVector<float64_t> apply_to_feature_vector(SGVector<float64_t> vector) override;
 
-	virtual EFeatureType get_feature_type() override
+	EFeatureType get_feature_type() override
 	{
 		return F_DREAL;
 	}
 
-	virtual EFeatureClass get_feature_class() override
+	EFeatureClass get_feature_class() override
 	{
 		return C_DENSE;
 	};
-
-	virtual void fit(std::shared_ptr<Features> f) override;
-
-	void cleanup();
 
 	virtual const char* get_name() const override
 	{
 		return "RFFPreprocessor";
 	}
 
-	virtual EPreprocessorType get_type() const override
+	EPreprocessorType get_type() const override
 	{
 		return P_RFF;
 	}
@@ -84,7 +80,9 @@ public:
 	virtual SGMatrix<float64_t> 
 	sample_spectral_density(int32_t dim_input_space) const;
 
-	virtual SGMatrix<float64_t> apply_to_matrix(SGMatrix<float64_t> matrix) override;
+	SGMatrix<float64_t> apply_to_matrix(SGMatrix<float64_t> matrix) override;
+
+	void fit_impl(const SGMatrix<float64_t>& feature_matrix) override;
 
 	/** Helper method which generates random coefficients and stores in the
 	 *  internal members. This method assumes the kernel has been set.

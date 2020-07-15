@@ -30,35 +30,22 @@ namespace shogun
 		RescaleFeatures();
 
 		/** dtor */
-		virtual ~RescaleFeatures();
-
-		/**
-		 * Fit preprocessor into features
-		 *
-		 * @param features the features to derive the min and max values
-		 * from.
-		 */
-		virtual void fit(std::shared_ptr<Features> features);
-
-		/**
-		 * Cleanup
-		 */
-		virtual void cleanup();
+		~RescaleFeatures() override;
 
 		/**
 		 * Apply preproc on a single feature vector
 		 */
-		virtual SGVector<float64_t>
-		apply_to_feature_vector(SGVector<float64_t> vector);
+		SGVector<float64_t>
+		apply_to_feature_vector(SGVector<float64_t> vector) override;
 
 		/** @return object name */
-		virtual const char* get_name() const
+		const char* get_name() const override
 		{
 			return "RescaleFeatures";
 		}
 
 		/** return a type of preprocessor */
-		virtual EPreprocessorType get_type() const
+		EPreprocessorType get_type() const override
 		{
 			return P_RESCALEFEATURES;
 		}
@@ -67,7 +54,9 @@ namespace shogun
 		void register_parameters();
 
 	protected:
-		virtual SGMatrix<float64_t> apply_to_matrix(SGMatrix<float64_t> matrix);
+		SGMatrix<float64_t> apply_to_matrix(SGMatrix<float64_t> matrix) override;
+
+		void fit_impl(const SGMatrix<float64_t>& feature_matrix) override;
 
 		/** min */
 		SGVector<float64_t> m_min;

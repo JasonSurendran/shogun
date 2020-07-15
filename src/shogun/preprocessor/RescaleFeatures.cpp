@@ -18,17 +18,13 @@ RescaleFeatures::RescaleFeatures() : DensePreprocessor<float64_t>()
 
 RescaleFeatures::~RescaleFeatures()
 {
-	cleanup();
+
 }
 
-void RescaleFeatures::fit(std::shared_ptr<Features> features)
+void RescaleFeatures::fit_impl(const SGMatrix<float64_t>& feature_matrix)
 {
-	if (m_fitted)
-		cleanup();
-
-	auto simple_features = features->as<DenseFeatures<float64_t>>();
-	int32_t num_examples = simple_features->get_num_vectors();
-	int32_t num_features = simple_features->get_num_features();
+	int32_t num_examples = feature_matrix.num_cols;
+	int32_t num_features = feature_matrix.num_rows;
 	require(
 	    num_examples > 1, "number of feature vectors should be at least 2!");
 
@@ -36,7 +32,6 @@ void RescaleFeatures::fit(std::shared_ptr<Features> features)
 
 	m_min = SGVector<float64_t>(num_features);
 	m_range = SGVector<float64_t>(num_features);
-	auto feature_matrix = simple_features->get_feature_matrix();
 	for (index_t i = 0; i < num_features; i++)
 	{
 		SGVector<float64_t> vec = feature_matrix.get_row_vector(i);
@@ -63,12 +58,6 @@ void RescaleFeatures::fit(std::shared_ptr<Features> features)
 		}
 	}
 
-	m_fitted = true;
-}
-
-void RescaleFeatures::cleanup()
-{
-	m_fitted = false;
 }
 
 SGMatrix<float64_t>

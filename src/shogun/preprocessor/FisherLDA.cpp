@@ -136,6 +136,8 @@ void FisherLDA::fit(std::shared_ptr<Features> features, std::shared_ptr<Labels> 
 		solver_canvar(dense_features, mc);
 	else
 		solver_classic(dense_features, mc);
+	
+	m_fitted.store(true);
 }
 
 void FisherLDA::solver_canvar(
@@ -193,13 +195,6 @@ void FisherLDA::solver_classic(
 		m_eigenvalues_vector[i] = eigenvalues[k];
 		m_transformation_matrix.set_column(k, eigenvectors.get_column(i));
 	}
-}
-
-void FisherLDA::cleanup()
-{
-	m_transformation_matrix=SGMatrix<float64_t>();
-	m_mean_vector=SGVector<float64_t>();
-	m_eigenvalues_vector=SGVector<float64_t>();
 }
 
 SGMatrix<float64_t> FisherLDA::apply_to_matrix(SGMatrix<float64_t> matrix)

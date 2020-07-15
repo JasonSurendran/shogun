@@ -12,6 +12,7 @@
 #include <shogun/base/SGObject.h>
 #include <shogun/lib/common.h>
 
+
 namespace shogun
 {
 
@@ -44,12 +45,12 @@ namespace shogun
 		Transformer();
 
 		/** destructor */
-		virtual ~Transformer()
+		~Transformer() override
 		{
 		}
 
 		/** get name */
-		virtual const char* get_name() const
+		const char* get_name() const override
 		{
 			return "Transformer";
 		}
@@ -106,7 +107,7 @@ namespace shogun
 		 */
 		void assert_fitted() const;
 
-		bool m_fitted;
+		std::atomic<bool> m_fitted{false};
 	};
 }
 #endif /* TRANSFORMER_H_ */
